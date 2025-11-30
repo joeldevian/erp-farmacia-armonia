@@ -16,23 +16,12 @@ exports.CategoriasService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
+const base_service_1 = require("../common/base.service");
 const categoria_entity_1 = require("./entities/categoria.entity");
-let CategoriasService = class CategoriasService {
+let CategoriasService = class CategoriasService extends base_service_1.BaseService {
     constructor(categoriaRepository) {
+        super(categoriaRepository, 'Categoría');
         this.categoriaRepository = categoriaRepository;
-    }
-    async findAll(filtros) {
-        const where = {};
-        if (filtros?.nombre) {
-            where.nombre = (0, typeorm_2.Like)(`%${filtros.nombre}%`);
-        }
-        if (filtros?.estado !== undefined) {
-            where.estado = filtros.estado;
-        }
-        return await this.categoriaRepository.find({
-            where,
-            order: { fecha_creacion: 'DESC' },
-        });
     }
     async findOne(id) {
         const categoria = await this.categoriaRepository.findOne({
@@ -44,42 +33,33 @@ let CategoriasService = class CategoriasService {
         return categoria;
     }
     async create(createCategoriaDto) {
-        try {
-            const categoria = this.categoriaRepository.create(createCategoriaDto);
-            return await this.categoriaRepository.save(categoria);
-        }
-        catch (error) {
-            if (error.code === '23505') {
-                throw new common_1.ConflictException(`Ya existe una categoría con el nombre "${createCategoriaDto.nombre}"`);
-            }
-            throw error;
-        }
+        await this.validateUniqueName(createCategoriaDto.nombre);
+        return await super.create(createCategoriaDto);
     }
     async update(id, updateCategoriaDto) {
-        const categoria = await this.findOne(id);
-        try {
-            Object.assign(categoria, updateCategoriaDto);
-            return await this.categoriaRepository.save(categoria);
+        if (updateCategoriaDto.nombre) {
+            await this.validateUniqueName(updateCategoriaDto.nombre, id);
         }
-        catch (error) {
-            if (error.code === '23505') {
-                throw new common_1.ConflictException(`Ya existe una categoría con el nombre "${updateCategoriaDto.nombre}"`);
+        return await super.update(id, updateCategoriaDto);
+    }
+    async validateUniqueName(nombre, excludeId) {
+        const whereClause = { nombre };
+        if (excludeId) {
+            const existing = await this.categoriaRepository.findOne({
+                where: { nombre },
+            });
+            if (existing && existing.id_categoria !== excludeId) {
+                throw new common_1.ConflictException(`Ya existe una categoría con el nombre "${nombre}"`);
             }
-            throw error;
         }
-    }
-    async remove(id) {
-        const categoria = await this.findOne(id);
-        categoria.estado = false;
-        const categoriaDesactivada = await this.categoriaRepository.save(categoria);
-        return {
-            message: 'Categoría desactivada exitosamente',
-            categoria: categoriaDesactivada,
-        };
-    }
-    async hardDelete(id) {
-        const categoria = await this.findOne(id);
-        await this.categoriaRepository.remove(categoria);
+        else {
+            const exists = await this.categoriaRepository.findOne({
+                where: { nombre },
+            });
+            if (exists) {
+                throw new common_1.ConflictException(`Ya existe una categoría con el nombre "${nombre}"`);
+            }
+        }
     }
 };
 exports.CategoriasService = CategoriasService;

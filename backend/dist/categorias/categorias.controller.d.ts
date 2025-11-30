@@ -11,7 +11,7 @@ export declare class CategoriasController {
     update(id: number, updateCategoriaDto: UpdateCategoriaDto): Promise<Categoria>;
     remove(id: number): Promise<{
         message: string;
-        categoria: Categoria;
+        entity: Categoria;
     }>;
     hardDelete(id: number): Promise<{
         message: string;

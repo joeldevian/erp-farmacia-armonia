@@ -53,7 +53,7 @@ export class CategoriasController {
     @Delete(':id')
     async remove(
         @Param('id', ParseIntPipe) id: number,
-    ): Promise<{ message: string; categoria: Categoria }> {
+    ): Promise<{ message: string; entity: Categoria }> {
         return await this.categoriasService.remove(id);
     }
 

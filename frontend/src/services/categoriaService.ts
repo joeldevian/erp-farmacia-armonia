@@ -61,11 +61,11 @@ export const categoriaService = {
 
     async deleteCategoria(
         id: number,
-    ): Promise<{ message: string; categoria: Categoria }> {
+    ): Promise<{ message: string; entity: Categoria }> {
         try {
             const response = await api.delete<{
                 message: string;
-                categoria: Categoria;
+                entity: Categoria;
             }>(`/categorias/${id}`);
             return response.data;
         } catch (error: any) {

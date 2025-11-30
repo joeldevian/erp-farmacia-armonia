@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { Categoria, CreateCategoriaDto, UpdateCategoriaDto } from '../../types/categoria';
 import { categoriaService } from '../../services/categoriaService';
+import { useCrud } from '../../hooks/useCrud';
 import CategoriaFilters from '../../components/Categorias/CategoriaFilters';
 import CategoriaTable from '../../components/Categorias/CategoriaTable';
 import CategoriaForm from '../../components/Categorias/CategoriaForm';
@@ -8,51 +9,38 @@ import ConfirmModal from '../../components/ConfirmModal';
 import './CategoriasPage.css';
 
 const CategoriasPage = () => {
-    const [categorias, setCategorias] = useState<Categoria[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    // Hook CRUD centralizado - inicializar sin filtros
+    const {
+        items: categorias,
+        loading,
+        error,
+        successMessage,
+        createItem,
+        updateItem,
+        deleteItem,
+        hardDeleteItem,
+        setFilters,
+        confirmModal,
+        handleConfirmAction,
+        handleCancelAction,
+    } = useCrud<Categoria, CreateCategoriaDto, UpdateCategoriaDto>(categoriaService, {
+        entityName: 'Categoría',
+        initialFilters: {}, // Sin filtros iniciales
+    });
+
+    // Estado local solo para UI
     const [showForm, setShowForm] = useState(false);
     const [selectedCategoria, setSelectedCategoria] = useState<Categoria | null>(null);
-    const [filtros, setFiltros] = useState<{ nombre: string; estado: string }>({
-        nombre: '',
-        estado: 'todos',
-    });
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-    // Estados para modales de confirmación
-    const [showConfirmModal, setShowConfirmModal] = useState(false);
-    const [confirmAction, setConfirmAction] = useState<{
-        type: 'delete' | 'hardDelete';
-        id: number;
-        step: 1 | 2;
-    } | null>(null);
-
-    const cargarCategorias = async () => {
-        try {
-            setLoading(true);
-            setError(null);
-
-            const filtrosAPI: { nombre?: string; estado?: boolean } = {};
-            if (filtros.nombre) filtrosAPI.nombre = filtros.nombre;
-            if (filtros.estado !== 'todos') {
-                filtrosAPI.estado = filtros.estado === 'activos';
-            }
-
-            const data = await categoriaService.getCategorias(filtrosAPI);
-            setCategorias(data);
-        } catch (err: any) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        cargarCategorias();
-    }, [filtros]);
-
+    // Handlers de UI
     const handleFilterChange = (newFiltros: { nombre: string; estado: string }) => {
-        setFiltros(newFiltros);
+        // Convertir filtros de UI a formato API
+        const apiFilters: any = {};
+        if (newFiltros.nombre) apiFilters.nombre = newFiltros.nombre;
+        if (newFiltros.estado !== 'todos') {
+            apiFilters.estado = newFiltros.estado === 'activos';
+        }
+        setFilters(apiFilters);
     };
 
     const handleCreateClick = () => {
@@ -66,22 +54,17 @@ const CategoriasPage = () => {
     };
 
     const handleSave = async (data: CreateCategoriaDto | UpdateCategoriaDto) => {
-        try {
-            if (selectedCategoria) {
-                await categoriaService.updateCategoria(selectedCategoria.id_categoria, data);
-                setSuccessMessage('Categoría actualizada exitosamente');
-            } else {
-                await categoriaService.createCategoria(data as CreateCategoriaDto);
-                setSuccessMessage('Categoría creada exitosamente');
-            }
+        let success = false;
+
+        if (selectedCategoria) {
+            success = await updateItem(selectedCategoria.id_categoria, data);
+        } else {
+            success = await createItem(data as CreateCategoriaDto);
+        }
+
+        if (success) {
             setShowForm(false);
             setSelectedCategoria(null);
-            await cargarCategorias();
-
-            setTimeout(() => setSuccessMessage(null), 3000);
-        } catch (err: any) {
-            setError(err.message);
-            setTimeout(() => setError(null), 5000);
         }
     };
 
@@ -89,82 +72,6 @@ const CategoriasPage = () => {
         setShowForm(false);
         setSelectedCategoria(null);
     };
-
-    const handleDelete = (id: number) => {
-        setConfirmAction({ type: 'delete', id, step: 1 });
-        setShowConfirmModal(true);
-    };
-
-    const handleHardDelete = (id: number) => {
-        setConfirmAction({ type: 'hardDelete', id, step: 1 });
-        setShowConfirmModal(true);
-    };
-
-    const handleConfirmModalConfirm = async () => {
-        if (!confirmAction) return;
-
-        if (confirmAction.type === 'hardDelete' && confirmAction.step === 1) {
-            // Mostrar segunda confirmación para hard delete
-            setConfirmAction({ ...confirmAction, step: 2 });
-            return;
-        }
-
-        // Ejecutar la acción
-        setShowConfirmModal(false);
-
-        try {
-            if (confirmAction.type === 'delete') {
-                const result = await categoriaService.deleteCategoria(confirmAction.id);
-                setSuccessMessage(result.message);
-            } else {
-                const result = await categoriaService.hardDeleteCategoria(confirmAction.id);
-                setSuccessMessage(result.message);
-            }
-            await cargarCategorias();
-            setTimeout(() => setSuccessMessage(null), 3000);
-        } catch (err: any) {
-            setError(err.message);
-            setTimeout(() => setError(null), 5000);
-        } finally {
-            setConfirmAction(null);
-        }
-    };
-
-    const handleConfirmModalCancel = () => {
-        setShowConfirmModal(false);
-        setConfirmAction(null);
-    };
-
-    const getConfirmModalProps = () => {
-        if (!confirmAction) return null;
-
-        if (confirmAction.type === 'delete') {
-            return {
-                title: 'Desactivar Categoría',
-                message: '¿Estás seguro de desactivar esta categoría?\n\nLa categoría quedará inactiva pero no se eliminará permanentemente.',
-                confirmText: 'Desactivar',
-                type: 'warning' as const,
-            };
-        }
-
-        if (confirmAction.step === 1) {
-            return {
-                title: '⚠️ Eliminar Permanentemente',
-                message: '¿Estás seguro de ELIMINAR PERMANENTEMENTE esta categoría?\n\nEsta acción NO se puede deshacer.',
-                confirmText: 'Continuar',
-                type: 'danger' as const,
-            };
-        }
-
-        return {
-            title: '⚠️ Confirmación Final',
-            message: '¿Realmente deseas eliminar esta categoría de forma permanente?\n\nEsta es tu última oportunidad para cancelar.',
-            confirmText: 'Eliminar Permanentemente',
-            type: 'danger' as const,
-        };
-    };
-
-    const modalProps = getConfirmModalProps();
 
     return (
         <div className="main-content">
@@ -201,8 +108,8 @@ const CategoriasPage = () => {
                 <CategoriaTable
                     categorias={categorias}
                     onEdit={handleEditClick}
-                    onDelete={handleDelete}
-                    onHardDelete={handleHardDelete}
+                    onDelete={(id) => deleteItem(id)}
+                    onHardDelete={(id) => hardDeleteItem(id)}
                 />
             )}
 
@@ -218,16 +125,16 @@ const CategoriasPage = () => {
                 </div>
             )}
 
-            {modalProps && (
+            {confirmModal && (
                 <ConfirmModal
-                    isOpen={showConfirmModal}
-                    title={modalProps.title}
-                    message={modalProps.message}
-                    confirmText={modalProps.confirmText}
+                    isOpen={confirmModal.isOpen}
+                    title={confirmModal.title}
+                    message={confirmModal.message}
+                    confirmText={confirmModal.confirmText}
                     cancelText="Cancelar"
-                    onConfirm={handleConfirmModalConfirm}
-                    onCancel={handleConfirmModalCancel}
-                    type={modalProps.type}
+                    onConfirm={handleConfirmAction}
+                    onCancel={handleCancelAction}
+                    type={confirmModal.type}
                 />
             )}
         </div>
