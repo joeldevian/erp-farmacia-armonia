@@ -4,19 +4,24 @@ import { useConfirmModal } from './useConfirmModal';
 interface CrudService<T, CreateDTO, UpdateDTO> {
     getCategorias?: (filters?: any) => Promise<T[]>;
     getLaboratorios?: (filters?: any) => Promise<T[]>;
+    getProductos?: (filters?: any) => Promise<T[]>;
     getAll?: (filters?: any) => Promise<T[]>;
     create?: (data: CreateDTO) => Promise<T>;
     createCategoria?: (data: CreateDTO) => Promise<T>;
     createLaboratorio?: (data: CreateDTO) => Promise<T>;
+    createProducto?: (data: CreateDTO) => Promise<T>;
     update?: (id: number, data: UpdateDTO) => Promise<T>;
     updateCategoria?: (id: number, data: UpdateDTO) => Promise<T>;
     updateLaboratorio?: (id: number, data: UpdateDTO) => Promise<T>;
+    updateProducto?: (id: number, data: UpdateDTO) => Promise<T>;
     delete?: (id: number) => Promise<{ message: string; entity: T }>;
     deleteCategoria?: (id: number) => Promise<{ message: string; entity: T }>;
     deleteLaboratorio?: (id: number) => Promise<{ message: string; entity: T }>;
+    deleteProducto?: (id: number) => Promise<{ message: string; entity: T }>;
     hardDelete?: (id: number) => Promise<{ message: string }>;
     hardDeleteCategoria?: (id: number) => Promise<{ message: string }>;
     hardDeleteLaboratorio?: (id: number) => Promise<{ message: string }>;
+    hardDeleteProducto?: (id: number) => Promise<{ message: string }>;
 }
 
 interface UseCrudOptions {
@@ -53,7 +58,7 @@ export const useCrud = <T, CreateDTO = Partial<T>, UpdateDTO = Partial<T>>(
             setLoading(true);
             setError(null);
 
-            const loadMethod = service.getCategorias || service.getLaboratorios || service.getAll;
+            const loadMethod = service.getCategorias || service.getLaboratorios || service.getProductos || service.getAll;
             if (!loadMethod) {
                 throw new Error('No se encontró método para cargar datos');
             }
@@ -77,7 +82,7 @@ export const useCrud = <T, CreateDTO = Partial<T>, UpdateDTO = Partial<T>>(
     // Crear item
     const createItem = async (data: CreateDTO): Promise<boolean> => {
         try {
-            const createMethod = service.createCategoria || service.createLaboratorio || service.create;
+            const createMethod = service.createCategoria || service.createLaboratorio || service.createProducto || service.create;
             if (!createMethod) {
                 throw new Error('Método create no disponible');
             }
@@ -98,7 +103,7 @@ export const useCrud = <T, CreateDTO = Partial<T>, UpdateDTO = Partial<T>>(
     // Actualizar item
     const updateItem = async (id: number, data: UpdateDTO): Promise<boolean> => {
         try {
-            const updateMethod = service.updateCategoria || service.updateLaboratorio || service.update;
+            const updateMethod = service.updateCategoria || service.updateLaboratorio || service.updateProducto || service.update;
             if (!updateMethod) {
                 throw new Error('Método update no disponible');
             }
@@ -125,7 +130,7 @@ export const useCrud = <T, CreateDTO = Partial<T>, UpdateDTO = Partial<T>>(
             type: 'warning',
             onConfirm: async () => {
                 try {
-                    const deleteMethod = service.deleteCategoria || service.deleteLaboratorio || service.delete;
+                    const deleteMethod = service.deleteCategoria || service.deleteLaboratorio || service.deleteProducto || service.delete;
                     if (!deleteMethod) {
                         throw new Error('Método delete no disponible');
                     }
@@ -164,7 +169,7 @@ export const useCrud = <T, CreateDTO = Partial<T>, UpdateDTO = Partial<T>>(
                         type: 'danger',
                         onConfirm: async () => {
                             try {
-                                const hardDeleteMethod = service.hardDeleteCategoria || service.hardDeleteLaboratorio || service.hardDelete;
+                                const hardDeleteMethod = service.hardDeleteCategoria || service.hardDeleteLaboratorio || service.hardDeleteProducto || service.hardDelete;
                                 if (!hardDeleteMethod) {
                                     throw new Error('Método hardDelete no disponible');
                                 }
