@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { getDatabaseConfig } from './config/database.config';
 import { CategoriasModule } from './categorias/categorias.module';
+import { LaboratoriosModule } from './laboratorios/laboratorios.module';
 
 @Module({
     imports: [
@@ -14,6 +15,7 @@ import { CategoriasModule } from './categorias/categorias.module';
         }),
         TypeOrmModule.forRoot(getDatabaseConfig()),
         CategoriasModule,
+        LaboratoriosModule,
     ],
     controllers: [AppController],
     providers: [AppService],
