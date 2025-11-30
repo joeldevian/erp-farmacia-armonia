@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { getDatabaseConfig } from './config/database.config';
+import { CategoriasModule } from './categorias/categorias.module';
 
 @Module({
     imports: [
@@ -12,6 +13,7 @@ import { getDatabaseConfig } from './config/database.config';
             envFilePath: '.env',
         }),
         TypeOrmModule.forRoot(getDatabaseConfig()),
+        CategoriasModule,
     ],
     controllers: [AppController],
     providers: [AppService],

@@ -1,4 +1,5 @@
 import type React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import {
     HomeIcon,
     DashboardIcon,
@@ -14,6 +15,10 @@ import {
 } from './Icons';
 
 const Sidebar: React.FC = () => {
+    const location = useLocation();
+
+    const isActive = (path: string) => location.pathname === path;
+
     return (
         <aside className="sidebar">
             {/* Logo */}
@@ -29,18 +34,22 @@ const Sidebar: React.FC = () => {
             <nav className="sidebar-nav">
                 <div className="nav-section">
                     <div className="nav-section-title">Principal</div>
-                    <a href="#" className="nav-item active">
+                    <Link to="/" className={`nav-item ${isActive('/') ? 'active' : ''}`}>
                         <HomeIcon className="nav-icon" />
                         <span>Inicio</span>
-                    </a>
-                    <a href="#" className="nav-item">
+                    </Link>
+                    <Link to="/" className={`nav-item ${isActive('/dashboard') ? 'active' : ''}`}>
                         <DashboardIcon className="nav-icon" />
                         <span>Dashboard</span>
-                    </a>
+                    </Link>
                 </div>
 
                 <div className="nav-section">
                     <div className="nav-section-title">Gestión</div>
+                    <Link to="/categorias" className={`nav-item ${isActive('/categorias') ? 'active' : ''}`}>
+                        <PillIcon className="nav-icon" />
+                        <span>Categorías</span>
+                    </Link>
                     <a href="#" className="nav-item">
                         <PillIcon className="nav-icon" />
                         <span>Inventario</span>

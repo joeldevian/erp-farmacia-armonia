@@ -1,17 +1,24 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
+import CategoriasPage from './pages/Categorias/CategoriasPage';
 import './index.css';
 
 function App() {
     return (
-        <div className="app-layout">
-            <Sidebar />
-            <div className="main-wrapper">
-                <Header />
-                <Dashboard />
+        <BrowserRouter>
+            <div className="app-layout">
+                <Sidebar />
+                <div className="main-wrapper">
+                    <Header />
+                    <Routes>
+                        <Route path="/" element={<Dashboard />} />
+                        <Route path="/categorias" element={<CategoriasPage />} />
+                    </Routes>
+                </div>
             </div>
-        </div>
+        </BrowserRouter>
     );
 }
 

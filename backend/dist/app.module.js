@@ -13,6 +13,7 @@ const typeorm_1 = require("@nestjs/typeorm");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const database_config_1 = require("./config/database.config");
+const categorias_module_1 = require("./categorias/categorias.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -24,6 +25,7 @@ exports.AppModule = AppModule = __decorate([
                 envFilePath: '.env',
             }),
             typeorm_1.TypeOrmModule.forRoot((0, database_config_1.getDatabaseConfig)()),
+            categorias_module_1.CategoriasModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
