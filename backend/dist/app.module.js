@@ -17,6 +17,8 @@ const categorias_module_1 = require("./categorias/categorias.module");
 const laboratorios_module_1 = require("./laboratorios/laboratorios.module");
 const productos_module_1 = require("./productos/productos.module");
 const lotes_module_1 = require("./lotes/lotes.module");
+const almacenes_module_1 = require("./almacenes/almacenes.module");
+const productos_almacen_module_1 = require("./productos-almacen/productos-almacen.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -32,6 +34,8 @@ exports.AppModule = AppModule = __decorate([
             laboratorios_module_1.LaboratoriosModule,
             productos_module_1.ProductosModule,
             lotes_module_1.LotesModule,
+            almacenes_module_1.AlmacenesModule,
+            productos_almacen_module_1.ProductosAlmacenModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

@@ -8,6 +8,8 @@ import { CategoriasModule } from './categorias/categorias.module';
 import { LaboratoriosModule } from './laboratorios/laboratorios.module';
 import { ProductosModule } from './productos/productos.module';
 import { LotesModule } from './lotes/lotes.module';
+import { AlmacenesModule } from './almacenes/almacenes.module';
+import { ProductosAlmacenModule } from './productos-almacen/productos-almacen.module';
 
 @Module({
     imports: [
@@ -20,6 +22,8 @@ import { LotesModule } from './lotes/lotes.module';
         LaboratoriosModule,
         ProductosModule,
         LotesModule,
+        AlmacenesModule,
+        ProductosAlmacenModule,
     ],
     controllers: [AppController],
     providers: [AppService],
