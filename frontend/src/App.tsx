@@ -5,6 +5,7 @@ import Dashboard from './components/Dashboard';
 import CategoriasPage from './pages/Categorias/CategoriasPage';
 import LaboratoriosPage from './pages/Laboratorios/LaboratoriosPage';
 import ProductosPage from './pages/Productos/ProductosPage';
+import LotesPage from './pages/Lotes/LotesPage';
 import './index.css';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
                         <Route path="/categorias" element={<CategoriasPage />} />
                         <Route path="/laboratorios" element={<LaboratoriosPage />} />
                         <Route path="/productos" element={<ProductosPage />} />
+                        <Route path="/lotes" element={<LotesPage />} />
                     </Routes>
                 </div>
             </div>

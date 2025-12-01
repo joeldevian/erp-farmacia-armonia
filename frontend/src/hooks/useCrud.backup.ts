@@ -5,28 +5,23 @@ interface CrudService<T, CreateDTO, UpdateDTO> {
     getCategorias?: (filters?: any) => Promise<T[]>;
     getLaboratorios?: (filters?: any) => Promise<T[]>;
     getProductos?: (filters?: any) => Promise<T[]>;
-    getLotes?: (filters?: any) => Promise<T[]>;
     getAll?: (filters?: any) => Promise<T[]>;
     create?: (data: CreateDTO) => Promise<T>;
     createCategoria?: (data: CreateDTO) => Promise<T>;
     createLaboratorio?: (data: CreateDTO) => Promise<T>;
     createProducto?: (data: CreateDTO) => Promise<T>;
-    createLote?: (data: CreateDTO) => Promise<T>;
-    update?: (id: number | string, data: UpdateDTO) => Promise<T>;
+    update?: (id: number, data: UpdateDTO) => Promise<T>;
     updateCategoria?: (id: number, data: UpdateDTO) => Promise<T>;
     updateLaboratorio?: (id: number, data: UpdateDTO) => Promise<T>;
     updateProducto?: (id: number, data: UpdateDTO) => Promise<T>;
-    updateLote?: (id: string, data: UpdateDTO) => Promise<T>;
-    delete?: (id: number | string) => Promise<{ message: string; entity: T }>;
+    delete?: (id: number) => Promise<{ message: string; entity: T }>;
     deleteCategoria?: (id: number) => Promise<{ message: string; entity: T }>;
     deleteLaboratorio?: (id: number) => Promise<{ message: string; entity: T }>;
     deleteProducto?: (id: number) => Promise<{ message: string; entity: T }>;
-    deleteLote?: (id: string) => Promise<{ message: string; entity: T }>;
-    hardDelete?: (id: number | string) => Promise<{ message: string }>;
+    hardDelete?: (id: number) => Promise<{ message: string }>;
     hardDeleteCategoria?: (id: number) => Promise<{ message: string }>;
     hardDeleteLaboratorio?: (id: number) => Promise<{ message: string }>;
     hardDeleteProducto?: (id: number) => Promise<{ message: string }>;
-    hardDeleteLote?: (id: string) => Promise<{ message: string }>;
 }
 
 interface UseCrudOptions {
@@ -63,7 +58,7 @@ export const useCrud = <T, CreateDTO = Partial<T>, UpdateDTO = Partial<T>>(
             setLoading(true);
             setError(null);
 
-            const loadMethod = service.getCategorias || service.getLaboratorios || service.getProductos || service.getLotes || service.getAll;
+            const loadMethod = service.getCategorias || service.getLaboratorios || service.getProductos || service.getAll;
             if (!loadMethod) {
                 throw new Error('No se encontró método para cargar datos');
             }
@@ -87,7 +82,7 @@ export const useCrud = <T, CreateDTO = Partial<T>, UpdateDTO = Partial<T>>(
     // Crear item
     const createItem = async (data: CreateDTO): Promise<boolean> => {
         try {
-            const createMethod = service.createCategoria || service.createLaboratorio || service.createProducto || service.createLote || service.create;
+            const createMethod = service.createCategoria || service.createLaboratorio || service.createProducto || service.create;
             if (!createMethod) {
                 throw new Error('Método create no disponible');
             }
@@ -106,14 +101,14 @@ export const useCrud = <T, CreateDTO = Partial<T>, UpdateDTO = Partial<T>>(
     };
 
     // Actualizar item
-    const updateItem = async (id: number | string, data: UpdateDTO): Promise<boolean> => {
+    const updateItem = async (id: number, data: UpdateDTO): Promise<boolean> => {
         try {
-            const updateMethod = service.updateCategoria || service.updateLaboratorio || service.updateProducto || service.updateLote || service.update;
+            const updateMethod = service.updateCategoria || service.updateLaboratorio || service.updateProducto || service.update;
             if (!updateMethod) {
                 throw new Error('Método update no disponible');
             }
 
-            await (updateMethod as any)(id, data);
+            await updateMethod(id, data);
             setSuccessMessage(`${entityName} actualizada exitosamente`);
             await loadItems();
 
@@ -127,7 +122,7 @@ export const useCrud = <T, CreateDTO = Partial<T>, UpdateDTO = Partial<T>>(
     };
 
     // Soft delete
-    const deleteItem = (id: number | string) => {
+    const deleteItem = (id: number) => {
         showConfirm({
             title: `Desactivar ${entityName}`,
             message: `¿Estás seguro de desactivar esta ${entityName.toLowerCase()}?\n\nLa ${entityName.toLowerCase()} quedará inactiva pero no se eliminará permanentemente.`,
@@ -135,12 +130,12 @@ export const useCrud = <T, CreateDTO = Partial<T>, UpdateDTO = Partial<T>>(
             type: 'warning',
             onConfirm: async () => {
                 try {
-                    const deleteMethod = service.deleteCategoria || service.deleteLaboratorio || service.deleteProducto || service.deleteLote || service.delete;
+                    const deleteMethod = service.deleteCategoria || service.deleteLaboratorio || service.deleteProducto || service.delete;
                     if (!deleteMethod) {
                         throw new Error('Método delete no disponible');
                     }
 
-                    const result = await (deleteMethod as any)(id);
+                    const result = await deleteMethod(id);
                     setSuccessMessage(result.message);
                     await loadItems();
 
@@ -154,7 +149,7 @@ export const useCrud = <T, CreateDTO = Partial<T>, UpdateDTO = Partial<T>>(
     };
 
     // Hard delete con doble confirmación
-    const hardDeleteItem = (id: number | string) => {
+    const hardDeleteItem = (id: number) => {
         // Primera confirmación
         showConfirm({
             title: `⚠️ Eliminar ${entityName} Permanentemente`,
@@ -174,12 +169,12 @@ export const useCrud = <T, CreateDTO = Partial<T>, UpdateDTO = Partial<T>>(
                         type: 'danger',
                         onConfirm: async () => {
                             try {
-                                const hardDeleteMethod = service.hardDeleteCategoria || service.hardDeleteLaboratorio || service.hardDeleteProducto || service.hardDeleteLote || service.hardDelete;
+                                const hardDeleteMethod = service.hardDeleteCategoria || service.hardDeleteLaboratorio || service.hardDeleteProducto || service.hardDelete;
                                 if (!hardDeleteMethod) {
                                     throw new Error('Método hardDelete no disponible');
                                 }
 
-                                const result = await (hardDeleteMethod as any)(id);
+                                const result = await hardDeleteMethod(id);
                                 setSuccessMessage(result.message);
                                 await loadItems();
 

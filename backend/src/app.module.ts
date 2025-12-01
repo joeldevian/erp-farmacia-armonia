@@ -7,6 +7,7 @@ import { getDatabaseConfig } from './config/database.config';
 import { CategoriasModule } from './categorias/categorias.module';
 import { LaboratoriosModule } from './laboratorios/laboratorios.module';
 import { ProductosModule } from './productos/productos.module';
+import { LotesModule } from './lotes/lotes.module';
 
 @Module({
     imports: [
@@ -18,6 +19,7 @@ import { ProductosModule } from './productos/productos.module';
         CategoriasModule,
         LaboratoriosModule,
         ProductosModule,
+        LotesModule,
     ],
     controllers: [AppController],
     providers: [AppService],
