@@ -11,6 +11,8 @@ import { LotesModule } from './lotes/lotes.module';
 import { AlmacenesModule } from './almacenes/almacenes.module';
 import { ProductosAlmacenModule } from './productos-almacen/productos-almacen.module';
 import { StockModule } from './stock/stock.module';
+import { ProveedoresModule } from './proveedores/proveedores.module';
+import { ProveedorProductoModule } from './proveedor-producto/proveedor-producto.module';
 
 @Module({
     imports: [
@@ -26,6 +28,8 @@ import { StockModule } from './stock/stock.module';
         AlmacenesModule,
         ProductosAlmacenModule,
         StockModule,
+        ProveedoresModule,
+        ProveedorProductoModule,
     ],
     controllers: [AppController],
     providers: [AppService],

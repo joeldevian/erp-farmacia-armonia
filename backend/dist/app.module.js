@@ -20,6 +20,8 @@ const lotes_module_1 = require("./lotes/lotes.module");
 const almacenes_module_1 = require("./almacenes/almacenes.module");
 const productos_almacen_module_1 = require("./productos-almacen/productos-almacen.module");
 const stock_module_1 = require("./stock/stock.module");
+const proveedores_module_1 = require("./proveedores/proveedores.module");
+const proveedor_producto_module_1 = require("./proveedor-producto/proveedor-producto.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -38,6 +40,8 @@ exports.AppModule = AppModule = __decorate([
             almacenes_module_1.AlmacenesModule,
             productos_almacen_module_1.ProductosAlmacenModule,
             stock_module_1.StockModule,
+            proveedores_module_1.ProveedoresModule,
+            proveedor_producto_module_1.ProveedorProductoModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

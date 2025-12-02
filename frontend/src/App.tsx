@@ -9,6 +9,7 @@ import LotesPage from './pages/Lotes/LotesPage';
 import AlmacenesPage from './pages/Almacenes/AlmacenesPage';
 import AlmacenDetallePage from './pages/Almacenes/AlmacenDetallePage';
 import StockPage from './pages/Stock/StockPage';
+import ProveedoresPage from './pages/Proveedores/ProveedoresPage';
 import './index.css';
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
                         <Route path="/almacenes" element={<AlmacenesPage />} />
                         <Route path="/almacenes/:id" element={<AlmacenDetallePage />} />
                         <Route path="/stock" element={<StockPage />} />
+                        <Route path="/proveedores" element={<ProveedoresPage />} />
                     </Routes>
                 </div>
             </div>
