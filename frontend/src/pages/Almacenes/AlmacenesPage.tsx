@@ -18,7 +18,6 @@ const AlmacenesPage: React.FC = () => {
         loading,
         error,
         successMessage,
-        filters,
         setFilters,
         createItem,
         updateItem,

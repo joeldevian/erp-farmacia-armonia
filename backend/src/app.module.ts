@@ -13,6 +13,7 @@ import { ProductosAlmacenModule } from './productos-almacen/productos-almacen.mo
 import { StockModule } from './stock/stock.module';
 import { ProveedoresModule } from './proveedores/proveedores.module';
 import { ProveedorProductoModule } from './proveedor-producto/proveedor-producto.module';
+import { OrdenCompraModule } from './orden-compra/orden-compra.module';
 
 @Module({
     imports: [
@@ -30,6 +31,7 @@ import { ProveedorProductoModule } from './proveedor-producto/proveedor-producto
         StockModule,
         ProveedoresModule,
         ProveedorProductoModule,
+        OrdenCompraModule,
     ],
     controllers: [AppController],
     providers: [AppService],

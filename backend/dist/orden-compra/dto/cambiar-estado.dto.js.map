@@ -1,0 +1,1 @@
+{"version":3,"file":"cambiar-estado.dto.js","sourceRoot":"","sources":["../../../src/orden-compra/dto/cambiar-estado.dto.ts"],"names":[],"mappings":";;;;;;;;;;;;AAAA,qDAAqD;AACrD,yEAAoE;AAEpE,MAAa,gBAAgB;CAM5B;AAND,4CAMC;AADG;IAJC,IAAA,wBAAM,EAAC,uCAAiB,EAAE;QACvB,OAAO,EAAE,wEAAwE;KACpF,CAAC;IACD,IAAA,4BAAU,EAAC,EAAE,OAAO,EAAE,wBAAwB,EAAE,CAAC;;gDACxB"}

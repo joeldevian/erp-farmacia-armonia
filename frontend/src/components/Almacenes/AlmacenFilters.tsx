@@ -14,13 +14,6 @@ const AlmacenFilters: React.FC<AlmacenFiltersProps> = ({
     const [tipo, setTipo] = useState('todos');
     const [estado, setEstado] = useState('todos');
 
-    const handleFilterChange = () => {
-        onFilterChange({
-            tipo: tipo !== 'todos' ? tipo : undefined,
-            estado: estado !== 'todos' ? estado : undefined,
-        });
-    };
-
     const handleTipoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setTipo(e.target.value);
         onFilterChange({

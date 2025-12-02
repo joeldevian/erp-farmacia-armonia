@@ -22,6 +22,7 @@ const productos_almacen_module_1 = require("./productos-almacen/productos-almace
 const stock_module_1 = require("./stock/stock.module");
 const proveedores_module_1 = require("./proveedores/proveedores.module");
 const proveedor_producto_module_1 = require("./proveedor-producto/proveedor-producto.module");
+const orden_compra_module_1 = require("./orden-compra/orden-compra.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -42,6 +43,7 @@ exports.AppModule = AppModule = __decorate([
             stock_module_1.StockModule,
             proveedores_module_1.ProveedoresModule,
             proveedor_producto_module_1.ProveedorProductoModule,
+            orden_compra_module_1.OrdenCompraModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

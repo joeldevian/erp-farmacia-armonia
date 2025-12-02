@@ -10,6 +10,9 @@ import AlmacenesPage from './pages/Almacenes/AlmacenesPage';
 import AlmacenDetallePage from './pages/Almacenes/AlmacenDetallePage';
 import StockPage from './pages/Stock/StockPage';
 import ProveedoresPage from './pages/Proveedores/ProveedoresPage';
+import OrdenCompraListPage from './pages/OrdenCompra/OrdenCompraListPage';
+import OrdenCompraCreatePage from './pages/OrdenCompra/OrdenCompraCreatePage';
+import OrdenCompraDetailPage from './pages/OrdenCompra/OrdenCompraDetailPage';
 import './index.css';
 
 function App() {
@@ -29,6 +32,9 @@ function App() {
                         <Route path="/almacenes/:id" element={<AlmacenDetallePage />} />
                         <Route path="/stock" element={<StockPage />} />
                         <Route path="/proveedores" element={<ProveedoresPage />} />
+                        <Route path="/ordenes-compra" element={<OrdenCompraListPage />} />
+                        <Route path="/ordenes-compra/nueva" element={<OrdenCompraCreatePage />} />
+                        <Route path="/ordenes-compra/:id" element={<OrdenCompraDetailPage />} />
                     </Routes>
                 </div>
             </div>
