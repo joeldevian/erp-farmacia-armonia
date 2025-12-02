@@ -95,6 +95,7 @@ let LotesService = class LotesService {
     async remove(id) {
         const lote = await this.findOne(id);
         lote.estado = lote_entity_1.EstadoLote.AGOTADO;
+        lote.cantidad_actual = 0;
         await this.loteRepository.save(lote);
         return {
             message: 'Lote desactivado exitosamente',

@@ -155,11 +155,15 @@ export class LotesService {
     }
 
     /**
-     * Soft delete
+     * Soft delete - marca como agotado y cantidad a 0
      */
     async remove(id: string): Promise<{ message: string; entity: Lote }> {
         const lote = await this.findOne(id);
-        lote.estado = EstadoLote.AGOTADO; // Marcar como agotado en lugar de eliminar
+
+        // Marcar como agotado y establecer cantidad a 0
+        lote.estado = EstadoLote.AGOTADO;
+        lote.cantidad_actual = 0;
+
         await this.loteRepository.save(lote);
 
         return {

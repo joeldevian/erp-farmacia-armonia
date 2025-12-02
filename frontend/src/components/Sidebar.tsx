@@ -1,18 +1,14 @@
 import type React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
-    HomeIcon,
-    DashboardIcon,
-    PillIcon,
-    ShoppingCartIcon,
-    UsersIcon,
-    BuildingIcon,
-    ChartIcon,
-    FileTextIcon,
-    SettingsIcon,
-    UserIcon,
-    LogOutIcon,
-} from './Icons';
+    Home as HomeIcon,
+    Pill as PillIcon,
+    BarChart3 as ChartIcon,
+    FileText as FileTextIcon,
+    Settings as SettingsIcon,
+    User as UserIcon,
+} from 'lucide-react';
+import './Sidebar.css';
 
 const Sidebar: React.FC = () => {
     const location = useLocation();
@@ -37,10 +33,6 @@ const Sidebar: React.FC = () => {
                     <Link to="/" className={`nav-item ${isActive('/') ? 'active' : ''}`}>
                         <HomeIcon className="nav-icon" />
                         <span>Inicio</span>
-                    </Link>
-                    <Link to="/" className={`nav-item ${isActive('/dashboard') ? 'active' : ''}`}>
-                        <DashboardIcon className="nav-icon" />
-                        <span>Dashboard</span>
                     </Link>
                 </div>
 
@@ -74,22 +66,12 @@ const Sidebar: React.FC = () => {
                         </svg>
                         <span>Almacenes</span>
                     </Link>
-                    <a href="#" className="nav-item">
-                        <PillIcon className="nav-icon" />
-                        <span>Inventario</span>
-                    </a>
-                    <a href="#" className="nav-item">
-                        <ShoppingCartIcon className="nav-icon" />
-                        <span>Ventas</span>
-                    </a>
-                    <a href="#" className="nav-item">
-                        <UsersIcon className="nav-icon" />
-                        <span>Clientes</span>
-                    </a>
-                    <a href="#" className="nav-item">
-                        <BuildingIcon className="nav-icon" />
-                        <span>Proveedores</span>
-                    </a>
+                    <Link to="/stock" className={`nav-item ${isActive('/stock') ? 'active' : ''}`}>
+                        <svg className="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                        <span>Stock</span>
+                    </Link>
                 </div>
 
                 <div className="nav-section">
@@ -120,7 +102,9 @@ const Sidebar: React.FC = () => {
             {/* Footer - Cerrar sesión */}
             <div className="sidebar-footer">
                 <button className="logout-btn">
-                    <LogOutIcon className="nav-icon" />
+                    <svg className="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
                     <span>Cerrar sesión</span>
                 </button>
             </div>

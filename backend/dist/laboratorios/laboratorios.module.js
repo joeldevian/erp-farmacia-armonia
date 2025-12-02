@@ -12,12 +12,13 @@ const typeorm_1 = require("@nestjs/typeorm");
 const laboratorio_entity_1 = require("./entities/laboratorio.entity");
 const laboratorios_controller_1 = require("./laboratorios.controller");
 const laboratorios_service_1 = require("./laboratorios.service");
+const producto_entity_1 = require("../productos/entities/producto.entity");
 let LaboratoriosModule = class LaboratoriosModule {
 };
 exports.LaboratoriosModule = LaboratoriosModule;
 exports.LaboratoriosModule = LaboratoriosModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([laboratorio_entity_1.Laboratorio])],
+        imports: [typeorm_1.TypeOrmModule.forFeature([laboratorio_entity_1.Laboratorio, producto_entity_1.Producto])],
         controllers: [laboratorios_controller_1.LaboratoriosController],
         providers: [laboratorios_service_1.LaboratoriosService],
         exports: [laboratorios_service_1.LaboratoriosService],

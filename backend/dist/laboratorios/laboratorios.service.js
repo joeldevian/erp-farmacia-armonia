@@ -18,10 +18,12 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const base_service_1 = require("../common/base.service");
 const laboratorio_entity_1 = require("./entities/laboratorio.entity");
+const producto_entity_1 = require("../productos/entities/producto.entity");
 let LaboratoriosService = class LaboratoriosService extends base_service_1.BaseService {
-    constructor(laboratorioRepository) {
+    constructor(laboratorioRepository, productoRepository) {
         super(laboratorioRepository, 'Laboratorio');
         this.laboratorioRepository = laboratorioRepository;
+        this.productoRepository = productoRepository;
     }
     async findOne(id) {
         const laboratorio = await this.laboratorioRepository.findOne({
@@ -42,6 +44,21 @@ let LaboratoriosService = class LaboratoriosService extends base_service_1.BaseS
         }
         return await super.update(id, updateLaboratorioDto);
     }
+    async hardDelete(id) {
+        const laboratorio = await this.laboratorioRepository.findOne({
+            where: { id_laboratorio: id },
+        });
+        if (!laboratorio) {
+            throw new common_1.NotFoundException(`Laboratorio con ID ${id} no encontrado`);
+        }
+        const productosAsociados = await this.productoRepository.count({
+            where: { id_laboratorio: id },
+        });
+        if (productosAsociados > 0) {
+            throw new common_1.ConflictException(`No se puede eliminar el laboratorio "${laboratorio.nombre}" porque tiene ${productosAsociados} producto(s) asociado(s). Primero debes reasignar o eliminar los productos.`);
+        }
+        await this.laboratorioRepository.remove(laboratorio);
+    }
     async validateUniqueName(nombre, excludeId) {
         const existing = await this.laboratorioRepository.findOne({
             where: { nombre },
@@ -55,6 +72,8 @@ exports.LaboratoriosService = LaboratoriosService;
 exports.LaboratoriosService = LaboratoriosService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(laboratorio_entity_1.Laboratorio)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __param(1, (0, typeorm_1.InjectRepository)(producto_entity_1.Producto)),
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository])
 ], LaboratoriosService);
 //# sourceMappingURL=laboratorios.service.js.map

@@ -26,8 +26,9 @@ let Lote = class Lote {
         fechaVenc.setHours(0, 0, 0, 0);
         if (this.cantidad_actual === 0) {
             this.estado = EstadoLote.AGOTADO;
+            return;
         }
-        else if (fechaVenc < hoy) {
+        if (fechaVenc < hoy) {
             this.estado = EstadoLote.EXPIRADO;
         }
         else {

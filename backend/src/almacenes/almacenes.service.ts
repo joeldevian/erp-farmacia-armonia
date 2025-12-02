@@ -7,6 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Almacen, TipoAlmacen, EstadoAlmacen } from './entities/almacen.entity';
+import { ProductoAlmacen } from '../productos-almacen/entities/producto-almacen.entity';
 import type { CreateAlmacenDto } from './dto/create-almacen.dto';
 import type { UpdateAlmacenDto } from './dto/update-almacen.dto';
 
@@ -15,6 +16,8 @@ export class AlmacenesService {
     constructor(
         @InjectRepository(Almacen)
         private readonly almacenRepository: Repository<Almacen>,
+        @InjectRepository(ProductoAlmacen)
+        private readonly productoAlmacenRepository: Repository<ProductoAlmacen>,
     ) { }
 
     /**
@@ -119,10 +122,28 @@ export class AlmacenesService {
     }
 
     /**
-     * Hard delete
+     * Hard delete con validación de productos-almacén asociados
      */
     async hardDelete(id: string): Promise<void> {
-        const almacen = await this.findOne(id);
+        const almacen = await this.almacenRepository.findOne({
+            where: { id_almacen: id },
+        });
+
+        if (!almacen) {
+            throw new NotFoundException(`Almacén con ID ${id} no encontrado`);
+        }
+
+        // Verificar si hay productos asociados a este almacén
+        const productosAsociados = await this.productoAlmacenRepository.count({
+            where: { id_almacen: id },
+        });
+
+        if (productosAsociados > 0) {
+            throw new ConflictException(
+                `No se puede eliminar el almacén "${almacen.nombre}" porque tiene ${productosAsociados} producto(s) asociado(s). Primero debes reasignar o eliminar los productos del almacén.`,
+            );
+        }
+
         await this.almacenRepository.remove(almacen);
     }
 

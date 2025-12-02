@@ -58,6 +58,7 @@ export class Lote {
 
     /**
      * Actualiza el estado del lote basado en fechas y cantidades
+     * No sobrescribe el estado AGOTADO si cantidad_actual es 0
      */
     actualizarEstado(): void {
         const hoy = new Date();
@@ -66,12 +67,14 @@ export class Lote {
         const fechaVenc = new Date(this.fecha_vencimiento);
         fechaVenc.setHours(0, 0, 0, 0);
 
-        // Si está agotado, mantener ese estado
+        // Si cantidad es 0, mantener como AGOTADO (respeta soft delete)
         if (this.cantidad_actual === 0) {
             this.estado = EstadoLote.AGOTADO;
+            return; // No continuar con otras validaciones
         }
+
         // Si está vencido
-        else if (fechaVenc < hoy) {
+        if (fechaVenc < hoy) {
             this.estado = EstadoLote.EXPIRADO;
         }
         // Si tiene stock y no está vencido

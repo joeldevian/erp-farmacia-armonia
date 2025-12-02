@@ -7,6 +7,7 @@ interface CrudService<T, CreateDTO, UpdateDTO> {
     getProductos?: (filters?: any) => Promise<T[]>;
     getLotes?: (filters?: any) => Promise<T[]>;
     getAlmacenes?: (filters?: any) => Promise<T[]>;
+    getStocks?: (filters?: any) => Promise<T[]>;
     getAll?: (filters?: any) => Promise<T[]>;
     create?: (data: CreateDTO) => Promise<T>;
     createCategoria?: (data: CreateDTO) => Promise<T>;
@@ -14,24 +15,28 @@ interface CrudService<T, CreateDTO, UpdateDTO> {
     createProducto?: (data: CreateDTO) => Promise<T>;
     createLote?: (data: CreateDTO) => Promise<T>;
     createAlmacen?: (data: CreateDTO) => Promise<T>;
+    createStock?: (data: CreateDTO) => Promise<T>;
     update?: (id: number | string, data: UpdateDTO) => Promise<T>;
     updateCategoria?: (id: number, data: UpdateDTO) => Promise<T>;
     updateLaboratorio?: (id: number, data: UpdateDTO) => Promise<T>;
     updateProducto?: (id: number, data: UpdateDTO) => Promise<T>;
     updateLote?: (id: string, data: UpdateDTO) => Promise<T>;
     updateAlmacen?: (id: string, data: UpdateDTO) => Promise<T>;
+    updateStock?: (id: string, data: UpdateDTO) => Promise<T>;
     delete?: (id: number | string) => Promise<{ message: string; entity: T }>;
     deleteCategoria?: (id: number) => Promise<{ message: string; entity: T }>;
     deleteLaboratorio?: (id: number) => Promise<{ message: string; entity: T }>;
     deleteProducto?: (id: number) => Promise<{ message: string; entity: T }>;
     deleteLote?: (id: string) => Promise<{ message: string; entity: T }>;
     deleteAlmacen?: (id: string) => Promise<{ message: string; entity: T }>;
+    deleteStock?: (id: string) => Promise<void>;
     hardDelete?: (id: number | string) => Promise<{ message: string }>;
     hardDeleteCategoria?: (id: number) => Promise<{ message: string }>;
     hardDeleteLaboratorio?: (id: number) => Promise<{ message: string }>;
     hardDeleteProducto?: (id: number) => Promise<{ message: string }>;
     hardDeleteLote?: (id: string) => Promise<{ message: string }>;
     hardDeleteAlmacen?: (id: string) => Promise<{ message: string }>;
+    hardDeleteStock?: (id: string) => Promise<{ message: string }>;
 }
 
 interface UseCrudOptions {
@@ -68,7 +73,7 @@ export const useCrud = <T, CreateDTO = Partial<T>, UpdateDTO = Partial<T>>(
             setLoading(true);
             setError(null);
 
-            const loadMethod = service.getCategorias || service.getLaboratorios || service.getProductos || service.getLotes || service.getAlmacenes || service.getAll;
+            const loadMethod = service.getCategorias || service.getLaboratorios || service.getProductos || service.getLotes || service.getAlmacenes || service.getStocks || service.getAll;
             if (!loadMethod) {
                 throw new Error('No se encontró método para cargar datos');
             }
@@ -92,7 +97,7 @@ export const useCrud = <T, CreateDTO = Partial<T>, UpdateDTO = Partial<T>>(
     // Crear item
     const createItem = async (data: CreateDTO): Promise<boolean> => {
         try {
-            const createMethod = service.createCategoria || service.createLaboratorio || service.createProducto || service.createLote || service.createAlmacen || service.create;
+            const createMethod = service.createCategoria || service.createLaboratorio || service.createProducto || service.createLote || service.createAlmacen || service.createStock || service.create;
             if (!createMethod) {
                 throw new Error('Método create no disponible');
             }
@@ -113,7 +118,7 @@ export const useCrud = <T, CreateDTO = Partial<T>, UpdateDTO = Partial<T>>(
     // Actualizar item
     const updateItem = async (id: number | string, data: UpdateDTO): Promise<boolean> => {
         try {
-            const updateMethod = service.updateCategoria || service.updateLaboratorio || service.updateProducto || service.updateLote || service.updateAlmacen || service.update;
+            const updateMethod = service.updateCategoria || service.updateLaboratorio || service.updateProducto || service.updateLote || service.updateAlmacen || service.updateStock || service.update;
             if (!updateMethod) {
                 throw new Error('Método update no disponible');
             }
@@ -140,7 +145,7 @@ export const useCrud = <T, CreateDTO = Partial<T>, UpdateDTO = Partial<T>>(
             type: 'warning',
             onConfirm: async () => {
                 try {
-                    const deleteMethod = service.deleteCategoria || service.deleteLaboratorio || service.deleteProducto || service.deleteLote || service.deleteAlmacen || service.delete;
+                    const deleteMethod = service.deleteCategoria || service.deleteLaboratorio || service.deleteProducto || service.deleteLote || service.deleteAlmacen || service.deleteStock || service.delete;
                     if (!deleteMethod) {
                         throw new Error('Método delete no disponible');
                     }
@@ -179,7 +184,7 @@ export const useCrud = <T, CreateDTO = Partial<T>, UpdateDTO = Partial<T>>(
                         type: 'danger',
                         onConfirm: async () => {
                             try {
-                                const hardDeleteMethod = service.hardDeleteCategoria || service.hardDeleteLaboratorio || service.hardDeleteProducto || service.hardDeleteLote || service.hardDeleteAlmacen || service.hardDelete;
+                                const hardDeleteMethod = service.hardDeleteCategoria || service.hardDeleteLaboratorio || service.hardDeleteProducto || service.hardDeleteLote || service.hardDeleteAlmacen || service.hardDeleteStock || service.hardDelete;
                                 if (!hardDeleteMethod) {
                                     throw new Error('Método hardDelete no disponible');
                                 }

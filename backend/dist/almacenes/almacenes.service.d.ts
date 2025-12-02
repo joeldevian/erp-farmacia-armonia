@@ -1,10 +1,12 @@
 import { Repository } from 'typeorm';
 import { Almacen, TipoAlmacen, EstadoAlmacen } from './entities/almacen.entity';
+import { ProductoAlmacen } from '../productos-almacen/entities/producto-almacen.entity';
 import type { CreateAlmacenDto } from './dto/create-almacen.dto';
 import type { UpdateAlmacenDto } from './dto/update-almacen.dto';
 export declare class AlmacenesService {
     private readonly almacenRepository;
-    constructor(almacenRepository: Repository<Almacen>);
+    private readonly productoAlmacenRepository;
+    constructor(almacenRepository: Repository<Almacen>, productoAlmacenRepository: Repository<ProductoAlmacen>);
     findAll(filtros?: {
         tipo?: TipoAlmacen;
         estado?: EstadoAlmacen;

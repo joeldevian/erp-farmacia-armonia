@@ -17,9 +17,11 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const almacen_entity_1 = require("./entities/almacen.entity");
+const producto_almacen_entity_1 = require("../productos-almacen/entities/producto-almacen.entity");
 let AlmacenesService = class AlmacenesService {
-    constructor(almacenRepository) {
+    constructor(almacenRepository, productoAlmacenRepository) {
         this.almacenRepository = almacenRepository;
+        this.productoAlmacenRepository = productoAlmacenRepository;
     }
     async findAll(filtros) {
         const where = {};
@@ -74,7 +76,18 @@ let AlmacenesService = class AlmacenesService {
         };
     }
     async hardDelete(id) {
-        const almacen = await this.findOne(id);
+        const almacen = await this.almacenRepository.findOne({
+            where: { id_almacen: id },
+        });
+        if (!almacen) {
+            throw new common_1.NotFoundException(`Almacén con ID ${id} no encontrado`);
+        }
+        const productosAsociados = await this.productoAlmacenRepository.count({
+            where: { id_almacen: id },
+        });
+        if (productosAsociados > 0) {
+            throw new common_1.ConflictException(`No se puede eliminar el almacén "${almacen.nombre}" porque tiene ${productosAsociados} producto(s) asociado(s). Primero debes reasignar o eliminar los productos del almacén.`);
+        }
         await this.almacenRepository.remove(almacen);
     }
     async getResumenInventario(id) {
@@ -118,6 +131,8 @@ exports.AlmacenesService = AlmacenesService;
 exports.AlmacenesService = AlmacenesService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(almacen_entity_1.Almacen)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __param(1, (0, typeorm_1.InjectRepository)(producto_almacen_entity_1.ProductoAlmacen)),
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository])
 ], AlmacenesService);
 //# sourceMappingURL=almacenes.service.js.map
